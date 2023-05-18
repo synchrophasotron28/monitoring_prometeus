@@ -1,0 +1,24 @@
+# образ на основе которого создаём контейнер
+FROM python:3.8.3-alpine
+
+# рабочая директория внутри проекта
+WORKDIR /
+
+# переменные окружения для python
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV URL="http://api.weatherapi.com/v1/forecast.json?key=92b2b54828074632897211731232702&q={}&days=14"
+ENV FLASK_RUN_PORT=5050
+ENV FLASK_APP="weather_service.py"
+ENV FLASK_ENV=development
+
+
+# устанавливаем зависимости
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+EXPOSE 5050
+CMD flask run --host 0.0.0.0
+
+# копируем содержимое текущей папки в контейнер
+COPY . .
